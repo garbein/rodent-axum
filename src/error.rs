@@ -4,14 +4,21 @@ use axum::{
     response::{IntoResponse, Response},
 };
 use thiserror::Error;
-
+use deadpool_redis::PoolError;
 use crate::dto::Resp;
+
 #[derive(Debug, Error)]
 pub enum Error {
     #[error(transparent)]
     ValidationError(#[from] validator::ValidationErrors),
     #[error(transparent)]
     SqlxError(#[from] sqlx::Error),
+    #[error(transparent)]
+    RedisPoolError(#[from] PoolError),
+    #[error(transparent)]
+    RedisError(#[from] deadpool_redis::redis::RedisError),
+    #[error(transparent)]
+    SerdeJsonError(#[from] serde_json::Error),
 }
 
 impl Error {

@@ -1,7 +1,10 @@
 use crate::error::Error;
+use axum::Json;
 use serde::Serialize;
 
 pub type Result<T> = std::result::Result<T, Error>;
+
+pub type JsonResult<T> = Result<Json<Resp<T>>>;
 
 const ERROR_CODE: i32 = 1;
 

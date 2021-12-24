@@ -75,11 +75,19 @@ impl TryFrom<String> for AppEnv {
     }
 }
 
+
+#[derive(Debug, Deserialize)]
+pub struct RedisSetting {
+    pub host: String,
+    pub port: u16,
+}
+
 #[derive(Debug, Deserialize)]
 pub struct Setting {
     pub debug: bool,
     pub server: ServerSetting,
     pub db: DbSetting,
+    pub redis: RedisSetting,
 }
 
 impl Setting {

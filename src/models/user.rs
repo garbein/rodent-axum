@@ -1,9 +1,8 @@
 use chrono::prelude::*;
-use serde::Serialize;
-
+use serde::{Serialize, Deserialize};
 use crate::dto::user::UserReq;
 
-#[derive(Debug, Serialize, sqlx::FromRow)]
+#[derive(Debug, Serialize, Deserialize, sqlx::FromRow)]
 pub struct User {
     pub id: u64,
     pub username: String,

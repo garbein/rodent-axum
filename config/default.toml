@@ -13,3 +13,5 @@ database = "rodent_axum"
 max_connections = 10
 
 [redis]
+host = "127.0.0.1"
+port = 6379

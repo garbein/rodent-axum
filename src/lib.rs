@@ -8,3 +8,4 @@ mod error;
 mod models;
 mod services;
 mod dao;
+mod redis;
