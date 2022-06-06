@@ -75,7 +75,6 @@ impl TryFrom<String> for AppEnv {
     }
 }
 
-
 #[derive(Debug, Deserialize)]
 pub struct RedisSetting {
     pub host: String,
@@ -96,12 +95,12 @@ impl Setting {
             .unwrap_or_else(|_| "dev".to_string())
             .try_into()
             .expect("failed to parse app environment ");
-        let mut config = Config::default();
-        config.merge(File::with_name("config/default"))?;
-        config.merge(File::with_name(&format!("config/{}", app_env.as_str())).required(true))?;
-        config.merge(Environment::with_prefix("app").separator("_"))?;
-        //config.set("server.app_env", app_env.as_str())?;
-        let mut setting: Self = config.try_into()?;
+        let config = Config::builder()
+            .add_source(File::with_name("config/default"))
+            .add_source(File::with_name(&format!("config/{}", app_env.as_str())).required(true))
+            .add_source(Environment::with_prefix("app").separator("_"))
+            .build()?;
+        let mut setting: Self = config.try_deserialize()?;
         setting.server.app_env = app_env.into();
         Ok(setting)
     }

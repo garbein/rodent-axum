@@ -3,7 +3,7 @@ use crate::{
     routes,
     settings::{CliConfig, Setting}, redis::{self, RedisPool},
 };
-use axum::AddExtensionLayer;
+use axum::extract::Extension;
 use std::{env, net::SocketAddr};
 use structopt::StructOpt;
 use tower::ServiceBuilder;
@@ -38,7 +38,7 @@ pub async fn run() {
         .init();
 
     let setting = Setting::new().expect("fail to load settings");
-    tracing::info!("setting {:?}", setting);
+    tracing::info!("setting {:#?}", setting);
     let addr: SocketAddr = format!("{}:{}", setting.server.host, setting.server.port)
         .parse()
         .expect("fail to parse addr");
@@ -47,7 +47,7 @@ pub async fn run() {
     let layer = ServiceBuilder::new()
     .layer(TraceLayer::new_for_http())
     .layer(CorsLayer::permissive())
-    .layer(AddExtensionLayer::new(AppState::new(setting).await))
+    .layer(Extension(AppState::new(setting).await))
     .into_inner();
     let app = routes::new().layer(layer);
 
